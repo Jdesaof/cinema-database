@@ -12,20 +12,39 @@ Database indexes have been added using Prisma ORM to improve query performance a
 
 All indexes are defined in `prisma/schema.prisma` and applied through Prisma migrations.
 
-## Caching Plan
+## Database Optimization
 
-Caching can reduce database load and improve application performance.
+### Indexes
 
-| Data | Cache Duration | Cache Invalidation |
-|------|----------------|-------------------|
-| Movie list | 5 minutes | When a movie is added, updated, or deleted. |
-| Latest movies | 10 minutes | When a movie is added or its release date changes. |
-| Today's screenings | 1 minute | When a screening is added, updated, or deleted. |
-| Available seats | 10 seconds | When a ticket is booked or a booking is cancelled. |
-| Latest news | 5 minutes | When a news article is added, updated, or deleted. |
+The database uses indexes to improve query performance.
 
-### Future Implementation
+Examples:
+- movies_title_idx
+- movies_release_date_idx
+- screenings_starts_at_idx
+- screenings_movie_id_starts_at_idx
 
-Redis can be used in the future to implement caching.
+Index usage was verified using SQL EXPLAIN.
 
-The caching system is currently planned but not implemented.
+### Redis Caching
+
+Redis is used to cache movie data and reduce database queries.
+
+Endpoint:
+GET /movies
+
+The first request retrieves movies from MariaDB.
+Subsequent requests retrieve cached data from Redis.
+
+### Performance Test
+
+| Source | Response Time |
+|--------|---------------|
+| MariaDB | 122.3 ms |
+| Redis | 6.6 ms |
+
+In this test, the cached response was approximately
+18.4 times faster than the database response.
+
+Note: Results are based on a single comparison
+and may vary between requests.

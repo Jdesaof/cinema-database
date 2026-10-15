@@ -28,5 +28,17 @@ services:
     ports:
       - "8082:8080"
 
+  redis:
+    image: redis:7-alpine
+    container_name: cinema-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - cinema_redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+
 volumes:
   cinema_db_data:
+  cinema_redis_data:
