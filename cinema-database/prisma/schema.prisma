@@ -56,6 +56,9 @@ model Movie {
   screenings      Screening[]
   reviews         Review[]
 
+  @@index([title])
+  @@index([releaseDate])
+
   @@map("movies")
 }
 
@@ -115,6 +118,9 @@ model Screening {
   bookings    Booking[]
   ticket      Ticket?
 
+  @@index([startsAt])
+  @@index([movieId, startsAt])
+
   @@map("screenings")
 }
 
@@ -167,6 +173,8 @@ model News {
   publishedAt DateTime? @default(now()) @map("published_at") @db.DateTime(0)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.DateTime(0)
   user        User      @relation(fields: [userId], references: [userId], map: "news_users_user_id_fk")
+
+  @@index([publishedAt])
 
   @@map("news")
 }
